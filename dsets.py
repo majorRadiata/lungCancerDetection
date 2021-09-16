@@ -2,6 +2,8 @@ import csv
 import functools
 import glob
 import os
+import SimpleITK as sitk
+import numpy as np
 from collections import namedtuple
 
 # hold information for each nodule in named tuple
@@ -49,3 +51,11 @@ def get_candidate_info_list(require_on_disk_bool=True):
 
     candidate_info_list.sort(reverse=True)
     return candidate_info_list
+
+
+class Ct:
+    def __init__(self, series_uid):
+        mhd_path = glob.glob('E:/upload/LUNA/subset*/{}.mhd'.format(series_uid))[0]
+
+        ct_mhd = sitk.ReadImage(mhd_path)
+        ct_a = np.array(sitk.GetArrayFromImage(ct_mhd), dtype=np.float32)
